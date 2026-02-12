@@ -8,3 +8,12 @@ export function addDefaultMeshes() {
 
     return mesh;
 }
+
+export function addStandardMeshes() {
+    const geometry = new THREE.BoxGeometry(1,1,1)
+    const material = new THREE.MeshStandardMaterial({ 
+        color: 0xbbf634 
+    })
+    const mesh = new THREE.Mesh(geometry, material)
+    return mesh;
+}

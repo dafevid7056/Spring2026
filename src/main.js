@@ -1,7 +1,8 @@
 import { klein } from 'three/examples/jsm/Addons.js'
 import './style.css'
 import * as THREE from 'three'
-import { addDefaultMeshes } from './addDefaultMeshes.js'
+import { addDefaultMeshes, addStandardMeshes } from './addDefaultMeshes.js'
+import { addLights } from './addLights.js'
 import { add } from 'three/tsl'
 
 const scene = new THREE.Scene()
@@ -15,6 +16,7 @@ const renderer = new THREE.WebGLRenderer({
 const mesh = addDefaultMeshes()
 
 const meshes = {}
+const lights = {}
 
 init()
 function init() {
@@ -22,31 +24,36 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight)
   document.body.appendChild(renderer.domElement)
   camera.position.z = 5
+
+  lights.default = addLights()
+  scene.add(lights.default)
   // Here we populate our meshes container
   meshes.default = addDefaultMeshes()
   meshes.default.position.x = 1
 
-  meshes.default2 = addDefaultMeshes()
-  meshes.default2.position.x = -1
+  meshes.standard = addStandardMeshes()
+  meshes.standard.position.x = -1
 
-  meshes.default3 = addDefaultMeshes()
-  meshes.default3.position.y = 2
-  // ad meshes to the scene
+  // add meshes to the scene
   scene.add(meshes.default)
-  scene.add(meshes.default2)
-  scene.add(meshes.default3)
+  scene.add(meshes.standard)
   console.log(meshes.default)
 
+  resize()
   animate()
 }
-
+function resize() {
+  window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+  })
+}
 function animate() {
   requestAnimationFrame(animate)
   renderer.render(scene, camera)
   meshes.default.rotation.x += 0.01
   meshes.default.rotation.y += 0.01
-  meshes.default3.rotation.x += -0.01
-  meshes.default3.rotation.y += -0.01
-  meshes.default2.rotation.x += -0.01
-  meshes.default2.rotation.y += 0.01
+  meshes.standard.rotation.x += 0.01
+  meshes.standard.rotation.y += 0.01
 }
